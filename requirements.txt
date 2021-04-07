@@ -1,5 +1,9 @@
-# LinguaRep/bot.py: 4,5
+
+# LinguaRep/bot.py: 1,2,5
 discord == 1.0.1
 
-# LinguaRep/bot.py: 6
+# LinguaRep/bot.py: 3
 python_decouple == 3.4
+
+# LinguaRep/bot.py: 4
+randfacts == 0.3.0

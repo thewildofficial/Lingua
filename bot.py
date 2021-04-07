@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from decouple import config
+import randfacts
 from discord.ext.commands.core import command
 
 from datetime import datetime
@@ -30,7 +31,7 @@ async def on_ready():
         f'\n * Logged in as {client.user.name}#{client.user.discriminator} \n * Time: {datetime.now()}')
 
     await client.change_presence(
-        activity=discord.Game(name='remembering to remind!'),
+        activity=discord.Game(name=f'Did you know that {randfacts.getFact().lower()}'), #gets a cool,interesting fact
         status=discord.Status.dnd
     )
 
