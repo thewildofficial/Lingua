@@ -1,46 +1,40 @@
-import os
-from datetime import datetime
-
 import discord
 from discord.ext import commands
 from decouple import config
+from discord.ext.commands.core import command
+
+from datetime import datetime
+import os
+#hosting we are using for the bot
+import hosting
 
 intents = discord.Intents.default()
 intents.members = True
 
-client = commands.Bot(
-    command_prefix='*',
-    case_insensitive=True,
-    intents=intents
-)
+client = commands.Bot(command_prefix=["*"], intent=intents)
 
-#removed default help command as it is very ugly.
-client.remove_command('help')
+# Loads extensions at start
+for filename in os.listdir("extensions"):
+    if filename.endswith(".py"):
+        try:
+            extname = f"extensions.{filename[:-3]}"
+            client.load_extension(extname)
+            print(f" * '{extname}'  has been loaded")
+        except Exception as e:
+            print(e)
 
-# Load all Extensions
-
-def loadCogs():
-    for filename in os.listdir("Extensions"):
-        if filename.endswith(".py"):
-            try:
-                extname = f"extensions.{filename[:-3]}"
-                client.load_extension(extname)
-                print(f" * '{extname}'  has been loaded")
-            except Exception as e:
-                print(e)
-
-# Ready Message
-
+#starting
 @client.event
 async def on_ready():
     print(
         f'\n * Logged in as {client.user.name}#{client.user.discriminator} \n * Time: {datetime.now()}')
 
     await client.change_presence(
-        activity=discord.Game(name=''), #come up with a cool status over here
+        activity=discord.Game(name='remembering to remind!'),
         status=discord.Status.dnd
     )
-    loadCogs()
-    print("\n   LinguaRep is online and fully functional!")
 
+    print(f"\n  {client.user} is online and fully functional!")
+
+# hosting.py
 client.run(config('token'))

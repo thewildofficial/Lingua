@@ -1,2 +1,6 @@
 # Creds
 .env
+*.xml
+*.iml
+*.pyc
+.DS_Store
