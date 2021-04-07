@@ -11,8 +11,8 @@ import hosting
 
 intents = discord.Intents.default()
 intents.members = True
-
-client = commands.Bot(command_prefix=["*"], intent=intents)
+COMMAND_PREFIX = "*"
+client = commands.Bot(command_prefix=[COMMAND_PREFIX], intent=intents)
 
 # Loads extensions at start
 for filename in os.listdir("extensions"):
