@@ -24,6 +24,7 @@ class Information(commands.Cog):
                 #uses embed.choice to get subject list + the Dates related to each subject
                 choice = subject_view.choice
                 await subject_view.quit()
+
                 #quits previous MultipleChoice object and creates a new embed
                 chapter_view = discord.Embed(title=f"{choice} chapters", color = BotInformation.embed_color)
                 # ADD FIELDS WITH THE CHAPTERS HERE
@@ -31,6 +32,7 @@ class Information(commands.Cog):
                 chapter_view.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
                 chapter_view_message = await ctx.send(embed=chapter_view)
                 await chapter_view_message.add_reaction("⬅️")
+
                 if(await self.client.wait_for("reaction_add",
                                               check=lambda reaction,user: user==ctx.author and str(reaction.emoji)=="⬅️")):
                     await chapter_view_message.delete()
