@@ -9,6 +9,7 @@ import os
 
 
 
+
 class BotInformation:
     #all the information used by the Cogs to be stored here
     prefix = "%"

@@ -1,8 +1,16 @@
-
-# LinguaRep/bot.py: 1,2,5
+# LinguaRep/bot.py: 5
+# LinguaRep/extensions/filewalker.py: 1,2
+# LinguaRep/extensions/utilities.py: 1
 discord == 1.0.1
 
+# LinguaRep/extensions/filewalker.py: 3
+disputils == 0.1.3
+
+# LinguaRep/firestorewrapper.py: 3
+firebase_admin == 4.5.3
+
 # LinguaRep/bot.py: 3
+# LinguaRep/firestorewrapper.py: 2
 python_decouple == 3.4
 
 # LinguaRep/bot.py: 4
