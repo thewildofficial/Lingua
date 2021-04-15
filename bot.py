@@ -2,18 +2,23 @@ import discord
 from discord.ext import commands
 from decouple import config
 import randfacts
-from discord.ext.commands.core import command
+from discord.ext.commands import MinimalHelpCommand, DefaultHelpCommand
 
 from datetime import datetime
 import os
-#hosting we are using for the bot
-import hosting
+
+
+
+class BotInformation:
+    #all the information used by the Cogs to be stored here
+    prefix = "%"
+    embed_color = 0x03fc6f
+    bot_token = config('bot_token')
+    firebase_credentials = config('firebase_credentials')
 
 intents = discord.Intents.default()
 intents.members = True
-COMMAND_PREFIX = "*"
-client = commands.Bot(command_prefix=[COMMAND_PREFIX], intent=intents)
-
+client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents,help_command=DefaultHelpCommand())
 # Loads extensions at start
 for filename in os.listdir("extensions"):
     if filename.endswith(".py"):
@@ -38,4 +43,4 @@ async def on_ready():
     print(f"\n  {client.user} is online and fully functional!")
 
 # hosting.py
-client.run(config('token'))
+client.run(BotInformation.bot_token)

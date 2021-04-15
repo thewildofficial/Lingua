@@ -1,27 +1,45 @@
 import discord
 from discord.ext import commands
+from disputils import BotMultipleChoice
+from bot import BotInformation
 
-class FileGUI(commands.Cog):
+
+class Information(commands.Cog):
     #initialize client class
     def __init__(self, client):
         self.client = client
 
-    # list of reactions
-    reactions = ["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","➡️","⬅️"]
-    subjects = []
-    chapters = []
 
     @commands.command()
     async def view(self, ctx):
-        reactions = self.reactions #gets all applicable reactions
-        filewalker = discord.Embed(title="file structure",
-                                   description="select a number to go to a particular directory,and ➡️ and ⬅️ to navigate pages!",
-                                   color=0x38cc93)
-        filewalker.set_author(name=f"{ctx.author}",icon_url=f"{ctx.author.avatar_url}")
-        FW_message = await ctx.send(embed=filewalker)
-        for reaction in reactions:
-            await FW_message.add_reaction(reaction)
+        ''' - 📖 Shows a list of your subjects in an embed.
+        '''
+        async def builder():
+            subject_view = BotMultipleChoice(ctx,
+                                    ["subject list"],
+                                    f"{ctx.author}'s Subject View",
+                                    color=BotInformation.embed_color)
+            await subject_view.run()
+            if subject_view.choice is not None:
+                #uses embed.choice to get subject list + the Dates related to each subject
+                choice = subject_view.choice
+                await subject_view.quit()
+                #quits previous MultipleChoice object and creates a new embed
+                chapter_view = discord.Embed(title=f"{choice} chapters", color = BotInformation.embed_color)
+                # ADD FIELDS WITH THE CHAPTERS HERE
+
+                chapter_view.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
+                chapter_view_message = await ctx.send(embed=chapter_view)
+                await chapter_view_message.add_reaction("⬅️")
+                if(await self.client.wait_for("reaction_add",
+                                              check=lambda reaction,user: user==ctx.author and str(reaction.emoji)=="⬅️")):
+                    await chapter_view_message.delete()
+                    await builder()
+
+            else:
+                await subject_view.quit()
+        await builder()
 
 
 def setup(client):
-    client.add_cog(FileGUI(client))
+    client.add_cog(Information(client))
