@@ -12,10 +12,12 @@ import os
 
 class BotInformation:
     #all the information used by the Cogs to be stored here
+    CAC_channel = int(config('info_channel'))
     prefix = "%"
     embed_color = 0x03fc6f
     bot_token = config('bot_token')
     firebase_credentials = config('firebase_credentials')
+    version = "0.2"
 
 intents = discord.Intents.default()
 intents.members = True

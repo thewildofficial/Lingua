@@ -4,5 +4,5 @@
 *.iml
 *.pyc
 .DS_Store
-database/lingua-e689d-firebase-adminsdk-5j4ul-d2698feff3.json
 .env
+*.json
