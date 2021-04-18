@@ -1,6 +1,8 @@
+import discord
 from discord.ext import commands
 from bot import BotInformation
 import traceback
+
 class GeneralCommands(commands.Cog):
     #initialize client class
     def __init__(self, client):
@@ -44,3 +46,5 @@ class GeneralCommands(commands.Cog):
 
 def setup(client):
     client.add_cog(GeneralCommands(client))
+
+

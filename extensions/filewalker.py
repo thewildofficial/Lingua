@@ -1,16 +1,20 @@
 import discord
 from discord.ext import commands
 from disputils import BotMultipleChoice
+
 from bot import BotInformation
+from firestorewrapper import FirebaseAPI
 
 
 class SRS(commands.Cog):
     #initialize client class
     def __init__(self, client):
         self.client = client
+        self.db = FirebaseAPI()
     @commands.command()
     async def view(self, ctx):
         ''' - 📖 Shows a list of your subjects in an embed.'''
+        user_information = self.db.get_information(DiscordUser=ctx.author)
         async def builder():
             subject_view = BotMultipleChoice(ctx,
                                     ["subject list"],

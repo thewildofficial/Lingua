@@ -4,5 +4,4 @@
 *.iml
 *.pyc
 .DS_Store
-.env
 *.json
