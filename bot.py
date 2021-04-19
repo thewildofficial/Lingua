@@ -25,12 +25,9 @@ client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents,hel
 # Loads extensions at start
 for filename in os.listdir("extensions"):
     if filename.endswith(".py"):
-        try:
-            extname = f"extensions.{filename[:-3]}"
-            client.load_extension(extname)
-            print(f" * '{extname}'  has been loaded")
-        except Exception as e:
-            print(e)
+        extname = f"extensions.{filename[:-3]}"
+        client.load_extension(extname)
+        print(f" * '{extname}'  has been loaded")
 
 #starting
 @client.event
