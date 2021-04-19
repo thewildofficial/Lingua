@@ -1,4 +1,3 @@
-import traceback
 import firebase_admin
 from decouple import config
 from firebase_admin import credentials, firestore
