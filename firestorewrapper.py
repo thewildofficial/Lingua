@@ -49,3 +49,13 @@ class FirebaseAPI:
         else:
             print("The document doesn't exist! Run add_user first!")
 
+    def purge_user(self, DiscordID):
+        doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
+        doc = doc_ref.get()
+        if doc.exists:
+            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
+            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
+            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
+        else:
+            print('You cannot delete an entry that does not exist!')
+
