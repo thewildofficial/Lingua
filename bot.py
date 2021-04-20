@@ -8,8 +8,6 @@ from datetime import datetime
 import os
 
 
-
-
 class BotInformation:
     #all the information used by the Cogs to be stored here
     CAC_channel = int(config('info_channel'))
@@ -19,9 +17,10 @@ class BotInformation:
     firebase_credentials = config('firebase_credentials')
     version = "0.2"
 
+
 intents = discord.Intents.default()
 intents.members = True
-client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents,help_command=DefaultHelpCommand())
+client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents, help_command=DefaultHelpCommand())
 # Loads extensions at start
 for filename in os.listdir("extensions"):
     if filename.endswith(".py"):

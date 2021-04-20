@@ -10,7 +10,7 @@ class GeneralCommands(commands.Cog):
 
     @commands.command()
     async def info(self, ctx):
-        ''' - 🔍 displays general information about the bot'''
+        """ - 🔍 displays general information about the bot"""
         embed = discord.Embed(
             description="Lingua is a Spaced repetition revision and language learning bot that aids your learning journey.",
             color=BotInformation.embed_color)
@@ -33,15 +33,15 @@ class GeneralCommands(commands.Cog):
 
     @commands.command()
     async def feedback(self,ctx,*,suggestion):
-        '''- 💌 send some feedback or suggestion!
-        '''
+        
+        """- 💌 send some feedback or suggestion!
+        """
         try:
             await self.client.get_channel(BotInformation.CAC_channel).send(f"`{ctx.author}` sent the following feedback: \n ```{suggestion}```")
             await ctx.send("✅ thank you for your feedback! we will review it as soon as possible.")
         except Exception:
             traceback.print_exc()
             await ctx.send("😔 uh oh.. something went wrong,please try again later.")
-
 
 
 def setup(client):

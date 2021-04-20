@@ -11,10 +11,11 @@ class SRS(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.db = FirebaseAPI()
+
     @commands.command()
     async def view(self, ctx):
-        ''' - 📖 Shows a list of your subjects in an embed.'''
-        user_information = self.db.get_information(DiscordUser=ctx.author)
+        """- 📖 Shows a list of your subjects in an embed."""
+
         async def builder():
             subject_view = BotMultipleChoice(ctx,
                                     ["subject list"],
