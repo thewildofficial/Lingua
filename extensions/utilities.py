@@ -3,14 +3,14 @@ from discord.ext import commands
 from bot import BotInformation
 import traceback
 
-class GeneralCommands(commands.Cog):
+class General(commands.Cog):
     #initialize client class
     def __init__(self, client):
         self.client = client
 
     @commands.command()
     async def info(self, ctx):
-        """ - 🔍 displays general information about the bot"""
+        """ 🔍 displays general information about the bot"""
         embed = discord.Embed(
             description="Lingua is a Spaced repetition revision and language learning bot that aids your learning journey.",
             color=BotInformation.embed_color)
@@ -34,7 +34,7 @@ class GeneralCommands(commands.Cog):
     @commands.command()
     async def feedback(self,ctx,*,suggestion):
 
-        """- 💌 send some feedback or suggestion!
+        """ 💌 send some feedback or suggestion!
         """
         try:
             await self.client.get_channel(BotInformation.CAC_channel).send(f"`{ctx.author}` sent the following feedback: \n ```{suggestion}```")
@@ -45,6 +45,6 @@ class GeneralCommands(commands.Cog):
 
 
 def setup(client):
-    client.add_cog(GeneralCommands(client))
+    client.add_cog(General(client))
 
 

@@ -14,7 +14,7 @@ class SRS(commands.Cog):
 
     @commands.command()
     async def view(self, ctx):
-        """- 📖 Shows a list of your subjects in an embed."""
+        """📖 Shows a list of your subjects in an embed."""
 
         async def builder():
             subject_view = BotMultipleChoice(ctx,

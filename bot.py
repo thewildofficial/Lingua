@@ -8,6 +8,14 @@ from datetime import datetime
 import os
 
 
+class EmbedHelpCommand(commands.MinimalHelpCommand):
+    async def send_pages(self):
+        destination = self.get_destination()
+        for page in self.paginator.pages:
+            embed = discord.Embed(description=page)
+            await destination.send(embed=embed)
+
+
 class BotInformation:
     # all the information used by the Cogs to be stored here
     CAC_channel = int(config('info_channel'))
@@ -21,9 +29,8 @@ class BotInformation:
     invite_link = "https://discord.com/api/oauth2/authorize?client_id=828907102063558656&permissions=0&scope=bot"
 
 
-
 intents = discord.Intents.default()
-client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents, help_command=DefaultHelpCommand())
+client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents, help_command=EmbedHelpCommand())
 intents.members = True
 
 
@@ -38,6 +45,7 @@ def get_extensions():
             print(f" * '{extname}'  has been loaded")
     return ncogs
 
+
 # starting
 @client.event
 async def on_ready():
@@ -49,6 +57,7 @@ async def on_ready():
     )
 
     print(f"\n  {client.user} is online and fully functional!")
+
 
 # changes bot_version ad hoc
 BotInformation.bot_version = f"{get_extensions() / 10}"
