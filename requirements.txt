@@ -1,6 +1,6 @@
-# LinguaRep/bot.py: 5
+# LinguaRep/bot.py: 1,2,5
 # LinguaRep/extensions/filewalker.py: 1,2
-# LinguaRep/extensions/utilities.py: 1
+# LinguaRep/extensions/utilities.py: 1,2
 discord == 1.0.1
 
 # LinguaRep/extensions/filewalker.py: 3

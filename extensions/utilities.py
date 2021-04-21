@@ -33,7 +33,7 @@ class GeneralCommands(commands.Cog):
 
     @commands.command()
     async def feedback(self,ctx,*,suggestion):
-        
+
         """- 💌 send some feedback or suggestion!
         """
         try:

@@ -2,10 +2,6 @@ import firebase_admin
 from decouple import config
 from firebase_admin import credentials, firestore
 
-import firebase_admin
-from decouple import config
-from firebase_admin import credentials, firestore
-
 
 class FirebaseAPI:
     def __init__(self):
@@ -18,30 +14,29 @@ class FirebaseAPI:
             u'id': u'{}'.format(discord_user.id),
             u'Subjects': []
         }
-        date_data_init = {
+        date_data_template = {
             u'id': u'{}'.format(discord_user.id)
         }
-        chapter_data_init = {
+        chapter_data_template = {
             u'id': u'{}'.format(discord_user.id)
         }
-        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
-            raise Exception("User already exists!")
-        else:
-            self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set(data)
-            self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).set(chapter_data_init)
-            self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).set(date_data_init)
+        self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set(data)
+        self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).set(chapter_data_template)
+        self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).set(date_data_template)
 
-    def read_user(self, discord_user, type):  # getter can be chapter,dates or user_information
+    def read_user(self, discord_user, reader):  # getter can be chapter,dates or user_information
         try:
-            # exceptions arent good in this case,we want to make the user behind the scenes,and return information instantly
+            ''' exceptions aren't good in this case,
+            we want to make the user behind the scenes,
+            and return information instantly '''
             assert self.does_user_exist(discord_user) is True
             self.add_user(discord_user)
         finally:
-            if type.lower() == "user_information":
+            if reader.lower() == "user_information":
                 return self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().to_dict()
-            elif type.lower() == "chapter":
+            elif reader.lower() == "chapter":
                 return self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).get().to_dict()
-            elif type.lower() == "dates":
+            elif reader.lower() == "dates":
                 return self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).to_dict()
 
     def purge_user(self, discord_user):
