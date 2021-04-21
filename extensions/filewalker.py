@@ -18,7 +18,7 @@ class SRS(commands.Cog):
 
         async def builder():
             subject_view = BotMultipleChoice(ctx,
-                                    ["subject list"],
+                                    ["subject view"],
                                     f"{ctx.author}'s Subject View",
                                     color=BotInformation.embed_color)
             await subject_view.run()

@@ -11,51 +11,45 @@ class FirebaseAPI:
     def __init__(self):
         firebase_admin.initialize_app(credentials.Certificate(config('firebase_credentials')))
         self.db = firestore.client()
-        self.user_doc = {}
-        self.date_doc = {}
-        self.chapter_doc = {}
 
-    def add_user(self, DiscordID, DiscordName):
+    def add_user(self, discord_user):
         data = {
-            u'Username': u'{}'.format(DiscordName),
-            u'id': u'{}'.format(DiscordID),
+            u'Username': u'{}'.format(discord_user.name),
+            u'id': u'{}'.format(discord_user.id),
             u'Subjects': []
         }
         date_data_init = {
-            u'id': u'{}'.format(DiscordID)
+            u'id': u'{}'.format(discord_user.id)
         }
         chapter_data_init = {
-            u'id': u'{}'.format(DiscordID)
+            u'id': u'{}'.format(discord_user.id)
         }
-        doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
-        doc = doc_ref.get()
-        if doc.exists:
-            print("Document already exists!")
+        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
+            raise Exception("User already exists!")
         else:
-            print(u'No such document!')
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).set(data)
-            self.db.collection(u'Chapters').document(u'{}'.format(DiscordID)).set(chapter_data_init)
-            self.db.collection(u'Dates').document(u'{}'.format(DiscordID)).set(date_data_init)
+            self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set(data)
+            self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).set(chapter_data_init)
+            self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).set(date_data_init)
 
-    def read_user(self, DiscordID):
-        user_doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
-        user_doc_local = user_doc_ref.get().to_dict()
-        if user_doc_local is not None:
-            self.user_doc = user_doc_local
-            chapter_doc_ref = self.db.collection(u'Chapters').document(u'{}'.format(DiscordID))
-            date_doc_ref = self.db.collection(u'Dates').document(u'{}'.format(DiscordID))
-            self.chapter_doc = chapter_doc_ref.get().to_dict()
-            self.date_doc = date_doc_ref.get().to_dict()
+    def read_user(self, discord_user, type):  # getter can be chapter,dates or user_information
+        try:
+            # exceptions arent good in this case,we want to make the user behind the scenes,and return information instantly
+            assert self.does_user_exist(discord_user) is True
+            self.add_user(discord_user)
+        finally:
+            if type.lower() == "user_information":
+                return self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().to_dict()
+            elif type.lower() == "chapter":
+                return self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).get().to_dict()
+            elif type.lower() == "dates":
+                return self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).to_dict()
+
+    def purge_user(self, discord_user):
+        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).doc_ref.get().exists:
+            self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).delete()
         else:
-            print("The document doesn't exist! Run add_user first!")
+            raise Exception('You cannot delete entries that do not exist!')
 
-    def purge_user(self, DiscordID):
-        doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
-        doc = doc_ref.get()
-        if doc.exists:
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
-        else:
-            print('You cannot delete an entry that does not exist!')
-
+    def does_user_exist(self, discord_user):  # checks if the user exists
+        return self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get() is None if False else True
+        # returns False if user does not exists in the database,else True
