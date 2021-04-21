@@ -4,6 +4,7 @@ from bot import BotInformation
 import traceback
 
 class General(commands.Cog):
+    """General utility commands"""
     #initialize client class
     def __init__(self, client):
         self.client = client

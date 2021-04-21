@@ -9,6 +9,7 @@ import os
 
 
 class EmbedHelpCommand(commands.MinimalHelpCommand):
+    """builds embed for help command"""
     async def send_pages(self):
         destination = self.get_destination()
         for page in self.paginator.pages:
