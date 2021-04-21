@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from decouple import config
 import randfacts
-from discord.ext.commands import DefaultHelpCommand
 
 from datetime import datetime
 import os

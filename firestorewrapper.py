@@ -40,7 +40,7 @@ class FirebaseAPI:
                 return self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).to_dict()
 
     def purge_user(self, discord_user):
-        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).doc_ref.get().exists:
+        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
             self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).delete()
         else:
             raise Exception('You cannot delete entries that do not exist!')

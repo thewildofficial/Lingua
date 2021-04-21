@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from disputils import BotMultipleChoice
+from disputils import BotMultipleChoice, BotConfirmation
 
 from bot import BotInformation
 from firestorewrapper import FirebaseAPI
@@ -11,6 +11,23 @@ class SRS(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.db = FirebaseAPI()
+
+    @commands.command()
+    async def deleteall(self, ctx):
+        """🗑 deletes everything from your user database
+        **WARNING**:   THIS CANNOT BE REVERSED!"""
+        confirmation = BotConfirmation(ctx, BotInformation.embed_color)
+        await confirmation.confirm("by confirming this,we will delete all information (chapters,subjects and dates) "
+                                   "from your user database, which is IRREVERSIBLE."
+                                   " \n are you sure you want to proceed?")
+        if confirmation.confirmed:
+            try:
+                self.db.purge_user(ctx.author)
+                await confirmation.update("Deleted!")
+            except:
+                await confirmation.update("😭 Something went wrong,please try again later.")
+        else:
+            await confirmation.update("Aborted.")
 
     @commands.command()
     async def view(self, ctx):
