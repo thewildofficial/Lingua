@@ -14,13 +14,13 @@ class GeneralCommands(commands.Cog):
         embed = discord.Embed(
             description="Lingua is a Spaced repetition revision and language learning bot that aids your learning journey.",
             color=BotInformation.embed_color)
-        embed.set_author(name="Lingua ", url="https://github.com/thewildofficial/Lingua/tree/main",
+        embed.set_author(name=self.client.user, url=BotInformation.github,
                          icon_url=self.client.user.avatar_url)
-        embed.add_field(name="Support server", value="https://discord.gg/Wa5wTgcF", inline=True)
-        embed.add_field(name="Version", value=BotInformation.version, inline=True)
-        embed.add_field(name="Github", value="https://github.com/thewildofficial/Lingua/tree/main", inline=True)
+        embed.add_field(name="Support server", value=BotInformation.server, inline=True)
+        embed.add_field(name="Version", value=BotInformation.bot_version, inline=True)
+        embed.add_field(name="Github", value=BotInformation.github, inline=True)
         embed.add_field(name="Invite Link",
-                        value="https://discord.com/api/oauth2/authorize?client_id=828907102063558656&permissions=0&scope=bot",
+                        value=BotInformation.invite_link,
                         inline=True)
         await ctx.send(embed=embed)
 

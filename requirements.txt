@@ -14,4 +14,4 @@ firebase_admin == 4.5.3
 python_decouple == 3.4
 
 # LinguaRep/bot.py: 4
-randfacts == 0.3.0
+randfacts == 0.4.0
