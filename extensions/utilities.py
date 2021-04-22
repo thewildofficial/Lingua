@@ -13,7 +13,8 @@ class General(commands.Cog):
     async def info(self, ctx):
         """ 🔍 displays general information about the bot"""
         embed = discord.Embed(
-            description="Lingua is a Spaced repetition revision and language learning bot that aids your learning journey.",
+            description="Lingua is a Spaced repetition revision and language learning bot that aids your learning "
+                        "journey.",
             color=BotInformation.embed_color)
         embed.set_author(name=self.client.user, url=BotInformation.github,
                          icon_url=self.client.user.avatar_url)
@@ -35,14 +36,12 @@ class General(commands.Cog):
     @commands.command()
     async def feedback(self,ctx,*,suggestion):
 
-        """ 💌 send some feedback or suggestion!
-        """
+        """ 💌 send some feedback or suggestion!"""
         try:
             await self.client.get_channel(BotInformation.CAC_channel).send(f"`{ctx.author}` sent the following feedback: \n ```{suggestion}```")
             await ctx.send("✅ thank you for your feedback! we will review it as soon as possible.")
-        except Exception:
-            traceback.print_exc()
-            await ctx.send("😔 uh oh.. something went wrong,please try again later.")
+        except Exception as e:
+            await ctx.send(f"😔 uh oh.. something went wrong,please try again later")
 
 
 def setup(client):

@@ -9,10 +9,11 @@ import os
 
 class EmbedHelpCommand(commands.MinimalHelpCommand):
     """builds embed for help command"""
+
     async def send_pages(self):
         destination = self.get_destination()
         for page in self.paginator.pages:
-            embed = discord.Embed(description=page)
+            embed = discord.Embed(description=page,color=BotInformation.embed_color)
             await destination.send(embed=embed)
 
 
@@ -23,7 +24,7 @@ class BotInformation:
     embed_color = 0x03fc6f
     bot_token = config('bot_token')
     firebase_credentials = config('firebase_credentials')
-    bot_version = ""
+    bot_version = ""  # gets updated on_bot_run
     github = "https://github.com/thewildofficial/Lingua/tree/main"
     server = "https://discord.gg/Wa5wTgcF"
     invite_link = "https://discord.com/api/oauth2/authorize?client_id=828907102063558656&permissions=0&scope=bot"

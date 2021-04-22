@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import is_owner
 from disputils import BotMultipleChoice, BotConfirmation
 
 from bot import BotInformation
@@ -22,7 +23,7 @@ class SRS(commands.Cog):
                                    " \n are you sure you want to proceed?")
         if confirmation.confirmed:
             try:
-                self.db.purge_user(ctx.author)
+                self.db.delete_user(ctx.author)
                 await confirmation.update("Deleted!")
             except:
                 await confirmation.update("😭 Something went wrong,please try again later.")
@@ -32,10 +33,17 @@ class SRS(commands.Cog):
     @commands.command()
     async def view(self, ctx):
         """📖 Shows a list of your subjects in an embed."""
-
+        user_info = self.db.read_user(ctx.author)
+        print(user_info)
+        if user_info["Subject"] is None:
+            embed = discord.Embed(title="😐 Uh oh..",
+                                  description="it appears that you havent added any subjects yet. Try adding one with {add().__name__}!",
+                                  color=BotInformation.embed_color)
+            await ctx.send(embed=embed)
+            return
         async def builder():
             subject_view = BotMultipleChoice(ctx,
-                                             ["subject view"],
+                                             user_info["Subjects"],
                                              f"{ctx.author}'s Subject View",
                                              color=BotInformation.embed_color)
             await subject_view.run()

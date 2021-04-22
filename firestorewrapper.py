@@ -12,71 +12,56 @@ class FirebaseAPI:
         self.chapter_doc = {}
         self.subject_array = []
 
-    def add_user(self, DiscordID, DiscordName):
+    def add_user(self, discord_user):
         data = {
-            u'Username': u'{}'.format(DiscordName),
-            u'id': u'{}'.format(DiscordID),
+            u'Username': u'{}'.format(discord_user.name),
+            u'id': u'{}'.format(discord_user.id),
             u'Subjects': ["Biology", "Physics"]
         }
         date_data_init = {
-            u'id': u'{}'.format(DiscordID),
+            u'id': u'{}'.format(discord_user.id),
             u'misc': []
         }
         chapter_data_init = {
-            u'id': u'{}'.format(DiscordID),
+            u'id': u'{}'.format(discord_user.id),
             u'misc': [{u'A Modest Proposal': []}]
         }
-        doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
-        doc = doc_ref.get()
-        if doc.exists:
+        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
             print("Document already exists!")
         else:
             print(u'No such document!')
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).set(data)
-            self.db.collection(u'Chapters').document(u'{}'.format(DiscordID)).set(chapter_data_init)
-            self.db.collection(u'Dates').document(u'{}'.format(DiscordID)).set(date_data_init)
+            self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set(data)
+            self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).set(chapter_data_init)
+            self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).set(date_data_init)
 
-    def read_user(self, DiscordID):
-        user_doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
-        user_doc_local = user_doc_ref.get().to_dict()
-        if user_doc_local is not None:
-            self.user_doc = user_doc_local
-            chapter_doc_ref = self.db.collection(u'Chapters').document(u'{}'.format(DiscordID))
-            date_doc_ref = self.db.collection(u'Dates').document(u'{}'.format(DiscordID))
-            self.chapter_doc = chapter_doc_ref.get().to_dict()
-            self.date_doc = date_doc_ref.get().to_dict()
-        else:
-            print("The document doesn't exist! Run add_user first!")
+    def read_user(self, discord_user):
+        try:
+            assert self.does_user_exist(discord_user) is True
+            self.add_user(discord_user)
+        finally:
+            self.chapter_doc = self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).get().to_dict()
+            self.date_doc = self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).get().to_dict()
 
-    def delete_user(self, DiscordID):
-        doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
-        doc = doc_ref.get()
-        if doc.exists:
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
-            self.db.collection(u'Users').document(u'{}'.format(DiscordID)).delete()
+    def delete_user(self, discord_user):
+        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
+            self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).delete()
         else:
             print('You cannot delete an entry that does not exist!')
 
-    def subject_update(self, DiscordID, Subject_to_add):
-        user_doc_ref = self.db.collection(u'Users').document(u'{}'.format(DiscordID))
-        user_doc_local = user_doc_ref.get().to_dict()
-        self.subject_array = user_doc_local.get("Subjects")
-        self.subject_array.append(Subject_to_add)
-        user_doc_ref.set({
+    def subject_update(self, discord_user, subject):
+        self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().to_dict().get("Subjects").append(subject)
+        self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set({
             u'Subjects': self.subject_array
         }, merge=True)
 
-    def chapter_update(self, DiscordID, Chapter_to_add, Subject_to_add=u'misc'):
-        user_doc_ref = self.db.collection(u'Chapters').document(u'{}'.format(DiscordID))
-        user_doc_local = user_doc_ref.get().to_dict()
-        subject_array = user_doc_local.get(Subject_to_add)
-        subject_array.append(Chapter_to_add)
-        user_doc_ref.set({
-            Subject_to_add: subject_array
-        }, merge=True)
+    def chapter_update(self, discord_user, chapter, subject=u'misc'):
+        self.db.collection(u'Chapters').document(u'{}'.format(discord_user)).get().to_dict().get(subject).append(chapter)
+        self.db.collection(u'Chapters').document(u'{}'.format(discord_user)).set({subject: self.subject_array}, merge=True)
 
-    def date_update(self, DiscordID, Subject, Chapter, Timestamp):
-        user_doc_ref = self.db.collection(u'Dates').document(u'{}'.format(DiscordID))
-        user_doc_local = user_doc_ref.get().to_dict()
+    def date_update(self, discord_user, Subject, Chapter, Timestamp):
+        user_doc_ref = self.db.collection(u'Dates').document(u'{}'.format(discord_user.id))
+        user_doc_local = user_doc_ref.get().to_dict() # im not sure this is complete, so not gonna touch it
+
+    def does_user_exist(self, discord_user):
+        return self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get() is None if False else True
 
