@@ -1,5 +1,5 @@
 # Creds
-.env
+config.py
 *.xml
 *.iml
 *.pyc

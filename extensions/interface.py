@@ -31,19 +31,29 @@ class SRS(commands.Cog):
             await confirmation.update("Aborted.")
 
     @commands.command()
+    async def add(self, ctx, subject=None, chapter=None, date=None):
+        if subject is None:
+            await ctx.send(f"😪 syntax is `{BotInformation.prefix}add <subject> <chapter> <date>` where chapter and "
+                           f"date are optional \n (note: to be safe,you should encompass the parameters with quotes!)")
+            return
+
+    @commands.command()
     async def view(self, ctx):
         """📖 Shows a list of your subjects in an embed."""
-        user_info = self.db.read_user(ctx.author)
-        print(user_info)
-        if user_info["Subject"] is None:
+        loading_embed = await ctx.send(embed=discord.Embed(title="🏃🏻‍♂️ Loading...",
+                                                           description="please wait while our database processes your request.",
+                                                           color=BotInformation.embed_color))
+        user_info = self.db.read_user(ctx.author, "user")
+        if len(user_info[u"Subjects"]) == 0:
             embed = discord.Embed(title="😐 Uh oh..",
-                                  description="it appears that you havent added any subjects yet. Try adding one with {add().__name__}!",
+                                  description=f"it appears that you havent added any subjects yet. Try adding one with the add command!",
                                   color=BotInformation.embed_color)
-            await ctx.send(embed=embed)
+            await loading_embed.edit(embed=embed)
             return
+
         async def builder():
             subject_view = BotMultipleChoice(ctx,
-                                             user_info["Subjects"],
+                                             user_info[u"Subjects"],
                                              f"{ctx.author}'s Subject View",
                                              color=BotInformation.embed_color)
             await subject_view.run()
@@ -65,6 +75,7 @@ class SRS(commands.Cog):
             else:
                 await subject_view.quit()
 
+        await loading_embed.delete()
         await builder()
 
 

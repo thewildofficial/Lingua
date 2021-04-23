@@ -4,10 +4,12 @@ import firebase_admin
 from decouple import config
 from firebase_admin import credentials, firestore
 
+from bot import BotInformation
+
 
 class FirebaseAPI:
     def __init__(self):
-        firebase_admin.initialize_app(credentials.Certificate(config('firebase_credentials')))
+        firebase_admin.initialize_app(credentials.Certificate(BotInformation.firebase_credentials))
         self.db = firestore.client()
         self.subject_array = []
 
@@ -23,25 +25,25 @@ class FirebaseAPI:
         }
         chapter_data_init = {
             u'id': u'{}'.format(discord_user.id),
-            u'misc': [{u'A Modest Proposal': []}]
+            u'misc': [{u'': []}]
         }
-        if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
-            print("Document already exists!")
-        else:
-            print(u'No such document!')
-            self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set(data)
-            self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).set(chapter_data_init)
-            self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).set(date_data_init)
 
-    def read_user(self, discord_user):
+        self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set(data)
+        self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).set(chapter_data_init)
+        self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).set(date_data_init)
+
+    def read_user(self, discord_user,type):
         try:
             if self.does_user_exist(discord_user) is False:
                 self.add_user(discord_user)
         finally:
-            user_doc = self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().to_dict()
-            chapter_doc = self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).get().to_dict()
-            date_doc = self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).get().to_dict()
-            return [user_doc, chapter_doc, date_doc]
+            if type == "user":
+                return self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().to_dict()
+            elif type == "chapter":
+                return self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).get().to_dict()
+            elif type == "date":
+                return self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).get().to_dict()
+
 
     def delete_user(self, discord_user):
         if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
