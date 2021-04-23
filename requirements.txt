@@ -1,17 +1,19 @@
-# LinguaRep/bot.py: 1,2,5
-# LinguaRep/extensions/interface.py: 1,2
+# LinguaRep/bot.py: 1,2
+# LinguaRep/extensions/interface.py: 1,2,3
 # LinguaRep/extensions/utilities.py: 1,2
 discord == 1.0.1
 
-# LinguaRep/extensions/interface.py: 3
+# LinguaRep/extensions/interface.py: 4
 disputils == 0.1.3
 
-# LinguaRep/firestorewrapper.py: 3
+# LinguaRep/firestorewrapper.py: 5
 firebase_admin == 4.5.3
 
-# LinguaRep/bot.py: 3
-# LinguaRep/firestorewrapper.py: 2
+# LinguaRep/bot.py: 4
+pyfiglet == 0.8.post1
+
+# LinguaRep/firestorewrapper.py: 4
 python_decouple == 3.4
 
-# LinguaRep/bot.py: 4
+# LinguaRep/bot.py: 3
 randfacts == 0.4.0

@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import randfacts
+from pyfiglet import Figlet
 
 from datetime import datetime
 import os
@@ -44,6 +45,7 @@ for filename in os.listdir("extensions"):
 # starting
 @client.event
 async def on_ready():
+    print(Figlet().renderText('Lingua'))
     BotInformation.bot_version = f"v{len(client.commands) / 10}"
     print(
         f'\n * Logged in as {client.user.name}#{client.user.discriminator} \n * Time: {datetime.now()}')
