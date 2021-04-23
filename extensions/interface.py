@@ -33,9 +33,9 @@ class SRS(commands.Cog):
     @commands.command()
     async def view(self, ctx):
         """📖 Shows a list of your subjects in an embed."""
-        user_info = self.db.read_user(ctx.author)
-        print(user_info)
-        if user_info["Subject"] is None:
+        print(self.db.read_user(ctx.author))
+        user_info = self.db.read_user(ctx.author)[0]
+        if len(user_info.get(u'Subjects')) == 0:
             embed = discord.Embed(title="😐 Uh oh..",
                                   description="it appears that you havent added any subjects yet. Try adding one with {add().__name__}!",
                                   color=BotInformation.embed_color)
@@ -43,7 +43,7 @@ class SRS(commands.Cog):
             return
         async def builder():
             subject_view = BotMultipleChoice(ctx,
-                                             user_info["Subjects"],
+                                             user_info.get(u'Subjects'),
                                              f"{ctx.author}'s Subject View",
                                              color=BotInformation.embed_color)
             await subject_view.run()
