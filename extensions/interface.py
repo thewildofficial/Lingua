@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import is_owner
 from disputils import BotMultipleChoice, BotConfirmation
 
 from bot import BotInformation
