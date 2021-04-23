@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 from bot import BotInformation
-import traceback
 
 class General(commands.Cog):
     """General utility commands"""
