@@ -36,6 +36,25 @@ class SRS(commands.Cog):
             await ctx.send(f"😪 syntax is `{BotInformation.prefix}add <subject> <chapter> <date>` where chapter and "
                            f"date are optional \n (note: to be safe,you should encompass the parameters with quotes!)")
             return
+        # here,the subject would be something other than None
+        else:
+            subjects = self.db.read_user(ctx.author, "user")["Subjects"]
+            if subject in subjects:
+                # in this case,the subject already exists in the database
+                if chapter is None:
+                    # they pass just the subject alone
+                    await ctx.send(embed=discord.Embed(title=f"Subject `{subject}` already exists!",color=BotInformation.embed_color))
+                else:
+                    self.db.chapter_update(ctx.author,chapter,subject)
+                    await ctx.send(embed=discord.Embed(title=f"Chapter `{chapter}` added to database!",color=BotInformation.embed_color))
+            else:
+                # subject is not in database,therefore added to database
+                if chapter is not None:
+                    await ctx.send(f"Please add subject `{subject}` before adding chapters!")
+                else:
+                    self.db.subject_update(ctx.author,subject)
+                    await ctx.send(embed=discord.Embed(title=f"subject `{subject}` added to the database!",color=BotInformation.embed_color))
+
 
     @commands.command()
     async def view(self, ctx):

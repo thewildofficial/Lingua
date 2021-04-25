@@ -11,7 +11,6 @@ class FirebaseAPI:
     def __init__(self):
         firebase_admin.initialize_app(credentials.Certificate(BotInformation.firebase_credentials))
         self.db = firestore.client()
-        self.subject_array = []
 
     def add_user(self, discord_user):
         data = {
@@ -32,7 +31,7 @@ class FirebaseAPI:
         self.db.collection(u'Chapters').document(u'{}'.format(discord_user.id)).set(chapter_data_init)
         self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).set(date_data_init)
 
-    def read_user(self, discord_user,type):
+    def read_user(self, discord_user, type):
         try:
             if self.does_user_exist(discord_user) is False:
                 self.add_user(discord_user)
@@ -44,7 +43,6 @@ class FirebaseAPI:
             elif type == "date":
                 return self.db.collection(u'Dates').document(u'{}'.format(discord_user.id)).get().to_dict()
 
-
     def delete_user(self, discord_user):
         if self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().exists:
             self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).delete()
@@ -52,16 +50,16 @@ class FirebaseAPI:
             print('You cannot delete an entry that does not exist!')
 
     def subject_update(self, discord_user, subject):
-        self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().to_dict().get("Subjects").append(
-            subject)
+        subjects = self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).get().to_dict().get("Subjects")
+        subjects.append(subject)
         self.db.collection(u'Users').document(u'{}'.format(discord_user.id)).set({
-            u'Subjects': self.subject_array
+            u'Subjects': subjects
         }, merge=True)
 
     def chapter_update(self, discord_user, chapter, subject=u'misc'):
-        self.db.collection(u'Chapters').document(u'{}'.format(discord_user)).get().to_dict().get(subject).append(
-            chapter)
-        self.db.collection(u'Chapters').document(u'{}'.format(discord_user)).set({subject: self.subject_array},
+        subjects = self.db.collection(u'Chapters').document(u'{}'.format(discord_user)).get().to_dict().get(subject)
+        subjects.append(chapter)
+        self.db.collection(u'Chapters').document(u'{}'.format(discord_user)).set({subject: subjects},
                                                                                  merge=True)
 
     def date_update(self, discord_user, Subject, Input, Timestamp):
@@ -87,4 +85,3 @@ class FirebaseAPI:
             return False
         else:
             return True
-
